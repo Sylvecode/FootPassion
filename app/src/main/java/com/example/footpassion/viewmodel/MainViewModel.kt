@@ -4,8 +4,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amonteiro.a2024_02_fad_android.model.PictureBean
-import com.amonteiro.a2024_02_fad_android.model.WeatherAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
