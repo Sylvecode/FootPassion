@@ -4,73 +4,88 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.footpassion.model.FootPassionAPI
+import com.example.footpassion.model.GameBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class MainViewModel : ViewModel() {
 
-    val searchText = mutableStateOf("")
-    val myList = mutableStateListOf<PictureBean>()
-    val runInProgress = mutableStateOf(false)
-    val errorMessage = mutableStateOf("")
+    var list = mutableStateListOf<GameBean>()
+    private var errorMessage = mutableStateOf("")
 
-    //fun filterList() = myList.filter { it.title.contains(searchText.value, true) }
 
-    fun uploadSearchText(newText: String) {
-        searchText.value = newText
+
+
+    fun loadData(): List<GameBean>? {
+
+        errorMessage.value = ""
+        var newData: List<GameBean>? = null
+        try {
+             newData = FootPassionAPI.getAllNotOver()
+        }
+        catch(e: Exception) {
+            e.printStackTrace()
+        }
+        //list.addAll(newData)
+        /*viewModelScope.launch(Dispatchers.Default) {
+            try {
+                val newData = FootPassionAPI.getAllNotOver()
+                launch(Dispatchers.Main) {
+                    list.addAll(newData)
+                }
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                launch(Dispatchers.Main) {
+                    errorMessage.value = "Erreur : ${e.message}"
+                }
+            }
+        } */
+        return newData
     }
 
-    fun loadData() {//Simulation de chargement de donnée
-        myList.clear()
+    /*fun loadDetail() {
 
-        //Une tache en cours
-        runInProgress.value = true
         errorMessage.value = ""
 
         viewModelScope.launch(Dispatchers.Default) {
             try {
-                //Controle paramètre
-                if(searchText.value.length < 3) {
-                    throw Exception("Il faut au moins 3 caractères")
-                }
-
-                //Requête
-                val listWeather = WeatherAPI.loadWeatherAround(searchText.value)
-
-                //Controle de résultat
-                if(listWeather.isEmpty()) {
-                    throw Exception("Aucun résultat")
-                }
-
-                //Traitement de résultat
-                val listPicture = listWeather.map { weather ->
-                    PictureBean(
-                        weather.id,
-                        weather.weather.getOrNull(0)?.icon ?: "",
-                        weather.name,
-                        "Il fait ${weather.main.temp}°"
-                    )
-                }
-                //Retourner sur le Thread principale pour l'affichage
-                launch(Dispatchers.Main) {
-                    //J'ajoute tous les éléments à myList qui est observé
-                    myList.addAll(listPicture)
-                    //Tache terminée
-                    runInProgress.value = false
+                val selectedValue = selectMexicanFood
+                if(selectedValue != null) {
+                    val newData = FootPassionAPI.foodDetail(selectedValue.id)
+                    launch(Dispatchers.Main) {
+                        //Je viens cher'cher la position de celui qui est séléctionné
+                        val position = list.indexOfFirst { it.id == selectedValue.id }
+                        //Je le remplace dans la liste
+                        list[position] = newData
+                    }
                 }
             }
-            catch(e:Exception) {
-                e.printStackTrace() //permet d'afficher dans les logs la raison de l'exception
-                //Retourner sur le Thread principale pour l'affichage
+            catch (e: Exception) {
+                e.printStackTrace()
                 launch(Dispatchers.Main) {
-                    //J'ajoute tous les éléments à myList qui est observé
-                    errorMessage.value = "Une erreur est survenue : ${e.message}"
-                    //Tache terminée
-                    runInProgress.value = false
+                    errorMessage.value = "Erreur : ${e.message}"
                 }
             }
         }
-    }
+    }*/
 
+    /*
+    fun loadFakeData() {
+        list.add(
+            GameBean(difficulty = "Easy", id = "1", image = "https://apipics.s3.amazonaws.com/mexican_api/1.jpg", title = "Pressure cooker refried beans")
+        )
+
+        list.add(
+            GameBean(difficulty = "Medium", id = "2", image = "https://apipics.s3.amazonaws.com/mexican_api/2.jpg", title = "Pressure")
+        )
+
+        list.add(
+            GameBean(difficulty = "Hard", id = "3", image = "https://apipics.s3.amazonaws.com/mexican_api/3.jpg", title = "cooker")
+        )
+
+    }
+    
+     */
 }
