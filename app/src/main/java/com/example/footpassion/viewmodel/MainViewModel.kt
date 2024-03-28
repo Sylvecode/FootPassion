@@ -8,8 +8,19 @@ import com.example.footpassion.model.FootPassionAPI
 import com.example.footpassion.model.GameBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MainViewModel : ViewModel() {
+
+
+    val team1Text = mutableStateOf("")
+    val team2Text = mutableStateOf("")
+    val dateText = mutableStateOf("")
+    val dateParsed: Date = SimpleDateFormat("yyyy/MM/dd").parse(dateText.value)
+
+
+
 
     val myList = mutableStateListOf<GameBean>()
     private var errorMessage = mutableStateOf("")
@@ -41,6 +52,23 @@ class MainViewModel : ViewModel() {
             }
         }
         return newData
+    }
+
+
+
+    fun createGame(equipe1: String, equipe2: String, date: Date) {
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                println("Création d'un match")
+                FootPassionAPI.addGame(equipe1 = equipe1, equipe2 = equipe2, date = date)
+                val newGame = GameBean(equipe1 = equipe1, equipe2 = equipe2, date = date)
+                launch(Dispatchers.Main) {
+                    myList.add(newGame)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     /*fun loadDetail() {

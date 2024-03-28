@@ -1,7 +1,6 @@
 package com.example.footpassion.model
 
-import java.sql.Date
-import java.util.Random
+import java.util.Date
 
 fun main() {
 
@@ -17,3 +16,12 @@ data class GameBean(
     var scoreEquipe2: Int = 0,
     var fini: Boolean = false
 )
+/*
+val GameList = arrayListOf(
+    GameBean(1, "Marseille", "PSG", 0),
+    GameBean(2, "https://picsum.photos/201", "BCDE", LONG_TEXT),
+    GameBean(3, "https://picsum.photos/202", "CDEF", LONG_TEXT),
+    GameBean(4, "https://picsum.photos/203", "EFGH", LONG_TEXT)
+)
+
+ */

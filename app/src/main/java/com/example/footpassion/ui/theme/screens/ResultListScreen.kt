@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
+import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
 
 
@@ -53,7 +54,7 @@ fun ResultPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 //            //Jeu de donnée pour la Preview
             val mainViewModel: MainViewModel = viewModel()
-            ResultListScreen(navHostController, mainViewModel = mainViewModel)
+            ResultListScreen(mainViewModel = mainViewModel)
         }
     }
 
@@ -61,7 +62,7 @@ fun ResultPreview() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ResultListScreen(navHostController: NavHostController, mainViewModel: MainViewModel) {
+fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel: MainViewModel) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Ajouter l'image en arrière-plan
@@ -141,64 +142,72 @@ fun ResultListScreen(navHostController: NavHostController, mainViewModel: MainVi
                         Spacer(
                             Modifier
                                 .width(30.dp)
-                                .height(40.dp))
-                        Text(text = "Date",
+                                .height(40.dp)
+                        )
+                        Text(
+                            text = "Date",
                             textAlign = TextAlign.Start,
-                            modifier = Modifier.padding(15.dp))
+                            modifier = Modifier.padding(15.dp)
+                        )
                         Spacer(Modifier.width(100.dp))
-                        Text(text = "Match",
-                                modifier = Modifier.padding(15.dp))
+                        Text(
+                            text = "Match",
+                            modifier = Modifier.padding(15.dp)
+                        )
                     }
 
                     Row {
                         Spacer(Modifier.width(20.dp))
-                        Text(text = "2024-03-25",
-                            textAlign = TextAlign.Start,)
+                        Text(
+                            text = "2024-03-25",
+                            textAlign = TextAlign.Start,
+                        )
                         Spacer(Modifier.width(60.dp))
                         Text(text = "PSG    2 - 0    OM")
                     }
-
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.weight(1f)
-                    )
-                    {
-                        items(myMatchViewModel.myList.size) { index ->
-                            val match = myMatchViewModel.myList[index]
-                            PictureRowItem(data = match,
-                                onPictureClick = {
-                                    navHostController?.navigate(
-                                        Routes.MatchDetailScreen.withObject(
-                                            match
+                    /*
+                                        LazyColumn(
+                                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                                            modifier = Modifier.weight(1f)
                                         )
-                                    )
-                                })
-                        }
+                                        {
+                                            items(myMatchViewModel.myList.size) { index ->
+                                                val match = myMatchViewModel.myList[index]
+                                                PictureRowItem(data = match,
+                                                    onPictureClick = {
+                                                        navHostController?.navigate(
+                                                            Routes.MatchDetailScreen.withObject(
+                                                                match
+                                                            )
+                                                        )
+                                                    })
+                                            }
 
 
+                                        }
+
+                                    } */
+
+                    Spacer(Modifier.size(50.dp))
+
+
+                    Button(
+                        onClick = { mainViewModel.loadData() },
+                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    ) {
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = "Localized description",
+                            modifier = Modifier.size(ButtonDefaults.IconSize)
+                        )
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text("RETOUR")
+                    }
 
                 }
 
             }
-
-            Spacer(Modifier.size(50.dp))
-
-
-            Button(
-                onClick = { },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(
-                    Icons.Filled.ArrowBack,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("RETOUR")
-            }
-
         }
-
     }
 }
 

@@ -3,9 +3,11 @@ package com.example.footpassion.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.footpassion.ui.theme.screens.AddGameScreen
 import com.example.footpassion.ui.theme.screens.ListMatchScreen
 import com.example.footpassion.ui.theme.screens.ResultListScreen
@@ -43,9 +45,8 @@ fun AppNavigation() {
         }
 
         //Route 2 vers un écran de détail
-        composable(
-            route = Routes.ListMatchScreen.route,
-        ) {
+        composable(Routes.ListMatchScreen.route) {
+            //on peut passer le navHostController à un écran s'il déclenche des navigations
             ListMatchScreen(navHostController, mainViewModel = mainViewModel)
         }
 

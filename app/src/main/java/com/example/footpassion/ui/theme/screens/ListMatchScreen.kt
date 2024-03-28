@@ -23,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +35,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
+import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -44,13 +48,23 @@ import com.example.footpassion.viewmodel.MainViewModel
 fun ListMatchPreview(){
     FootPassionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            ListMatchScreen(navHostController, mainViewModel)
+            val mainViewModel: MainViewModel = viewModel()
+            ListMatchScreen(mainViewModel = mainViewModel)
         }
     }
 }
 
 @Composable
-fun ListMatchScreen(navHostController: NavHostController, mainViewModel: MainViewModel) {
+fun ListMatchScreen(navHostController: NavHostController? = null, mainViewModel: MainViewModel) {
+    // État local pour le score de l'équipe 1
+    val scoreTeam1 = remember { mutableStateOf(0) }
+
+// État local pour le score de l'équipe 2
+    val scoreTeam2 = remember { mutableStateOf(0) }
+    // État local pour le score final du match
+    val finalScore = remember { mutableStateOf("") }
+
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.pelouse),
@@ -94,7 +108,7 @@ fun ListMatchScreen(navHostController: NavHostController, mainViewModel: MainVie
                 contentAlignment = Alignment.Center
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { navHostController?.navigate(Routes.AddGameScreen.route) },
                     contentPadding = ButtonDefaults.ButtonWithIconContentPadding
                 ) {
                     Icon(

@@ -1,6 +1,7 @@
 package com.example.footpassion.ui.theme.screens
 
 import android.content.res.Configuration
+import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,10 +34,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
+import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
+import java.util.Date
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -46,13 +50,18 @@ fun AddGamePreview() {
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     FootPassionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            AddGameScreen(navHostController : NavHostController? = null, mainViewModel)
+            val mainViewModel: MainViewModel = viewModel()
+            mainViewModel.team1Text.value = ""
+            mainViewModel.team2Text.value = ""
+            mainViewModel.dateText.value = ""
+            AddGameScreen(mainViewModel = mainViewModel)
         }
     }
 }
 
+
 @Composable
-fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewModel) {
+fun AddGameScreen(navHostController: NavHostController? = null, mainViewModel: MainViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
         // Ajouter l'image en arrière-plan
         Image(
@@ -122,7 +131,6 @@ fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewM
             Spacer(Modifier.height(16.dp))
 
 
-
             // Encart avec fond blanc et bord arrondi
             Surface(
                 shape = RoundedCornerShape(14.dp),
@@ -142,13 +150,13 @@ fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewM
 
                     // Champ de texte pour l'équipe 1
                     TextField(
-                        value = "",
-                        onValueChange = { /* Ajouter la logique de mise à jour de la valeur */ },
+                        value = mainViewModel.team1Text.value,
+                        onValueChange = { mainViewModel.team1Text.value = it },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(16.dp))
 
-                    // Label "Equipe 2"
+// Label "Equipe 2"
                     Text(
                         text = "Equipe 2",
                         fontSize = 16.sp,
@@ -156,15 +164,15 @@ fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewM
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    // Champ de texte pour l'équipe 2
+// Champ de texte pour l'équipe 2
                     TextField(
-                        value = "",
-                        onValueChange = { /* Ajouter la logique de mise à jour de la valeur */ },
+                        value = mainViewModel.team2Text.value,
+                        onValueChange = { mainViewModel.team2Text.value = it },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(16.dp))
 
-                    // Label "Date"
+// Label "Date"
                     Text(
                         text = "Date",
                         fontSize = 16.sp,
@@ -172,42 +180,48 @@ fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewM
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    // Champ de texte pour la date
+
+// Champ de texte pour la date
                     TextField(
-                        value = "",
-                        onValueChange = { /* Ajouter la logique de mise à jour de la valeur */ },
+                        value = mainViewModel.dateText.value,
+                        onValueChange = { mainViewModel.dateText.value},
                         modifier = Modifier.fillMaxWidth()
                     )
 
+                    Spacer(Modifier.height(20.dp))
+
+                    Button(
+                        onClick = {
+                            mainViewModel.createGame(
+                                equipe1 = mainViewModel.team1Text.value,
+                                equipe2 = mainViewModel.team2Text.value,
+                                date = mainViewModel.dateParsed
+                            )
+                        },
+                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    ) {
+                        Icon(
+                            Icons.Filled.Send,
+                            contentDescription = "Localized description",
+                            modifier = Modifier.size(ButtonDefaults.IconSize)
+                        )
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text("Valider le match")
+                    }
+                    Spacer(Modifier.height(1.dp))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = null, // Modifier en conséquence
+                        contentScale = ContentScale.Fit,
+                        //   modifier = Modifier.size(50.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .size(120.dp)
+                    )
 
                 }
             }
-            Spacer(Modifier.height(20.dp))
-
-            Button(
-                onClick = { },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(
-                    Icons.Filled.Send,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Valider le match")
-            }
-            Spacer(Modifier.height(1.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null, // Modifier en conséquence
-                contentScale = ContentScale.Fit,
-                //   modifier = Modifier.size(50.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .size(120.dp)
-            )
-
         }
     }
 }
