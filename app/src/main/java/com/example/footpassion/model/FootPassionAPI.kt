@@ -1,6 +1,7 @@
 
 package com.example.footpassion.model
 
+import com.example.footpassion.model.FootPassionAPI.getAll
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -15,15 +16,15 @@ fun main() {
 
 object FootPassionAPI {
 
-    private val gson = Gson()
-    private val client = OkHttpClient()
+     private val gson = Gson()
+     private val client = OkHttpClient()
 
     fun addGame(equipe1: String, equipe2: String, date: Date){
+
     }
 
-    fun getAllNotOver(): List<GameBean> {
-        var json = sendGet("http://localhost:8080/getAllNotOver")
-
+    fun getAll(): List<GameBean> {
+        var json = sendGet("http://localhost:8080/getAll")
         return gson.fromJson(json, Array<GameBean>::class.java).toList()
     }
 

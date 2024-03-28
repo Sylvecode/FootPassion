@@ -11,10 +11,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
-    var list = mutableStateListOf<GameBean>()
+    val myList = mutableStateListOf<GameBean>()
     private var errorMessage = mutableStateOf("")
-
-
 
 
     fun loadData(): List<GameBean>? {
@@ -22,17 +20,17 @@ class MainViewModel : ViewModel() {
         errorMessage.value = ""
         var newData: List<GameBean>? = null
         try {
-             newData = FootPassionAPI.getAllNotOver()
+             newData = FootPassionAPI.getAll()
         }
         catch(e: Exception) {
             e.printStackTrace()
         }
         //list.addAll(newData)
-        /*viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
-                val newData = FootPassionAPI.getAllNotOver()
+                val newData = FootPassionAPI.getAll()
                 launch(Dispatchers.Main) {
-                    list.addAll(newData)
+                    myList.addAll(newData)
                 }
             }
             catch (e: Exception) {
@@ -41,7 +39,7 @@ class MainViewModel : ViewModel() {
                     errorMessage.value = "Erreur : ${e.message}"
                 }
             }
-        } */
+        }
         return newData
     }
 

@@ -2,7 +2,6 @@ package com.example.footpassion.ui.theme.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
@@ -35,10 +33,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import androidx.navigation.NavHostController
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
+import com.example.footpassion.viewmodel.MainViewModel
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -48,13 +46,13 @@ fun AddGamePreview() {
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     FootPassionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            AddGameScreen()
+            AddGameScreen(navHostController : NavHostController? = null, mainViewModel)
         }
     }
 }
 
 @Composable
-fun AddGameScreen() {
+fun AddGameScreen(navHostController: NavHostController, mainViewModel: MainViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
         // Ajouter l'image en arrière-plan
         Image(
