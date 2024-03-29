@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -163,12 +164,12 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
                         items(mainViewModel.myList.size) { index ->
                             val game = mainViewModel.myList[index]
                             Row {
-                                Spacer(Modifier.width(20.dp))
+                                Spacer(Modifier.width(5.dp))
                                 Text(
                                     text = game.date.toString(),
                                     textAlign = TextAlign.Start,
                                 )
-                                Spacer(Modifier.width(60.dp))
+                                Spacer(Modifier.width(10.dp))
                                 Text(text = game.equipe1+" " + game.scoreEquipe1.toString() + " - "+ game.scoreEquipe2.toString()+ " " + game.equipe2)
                             }
                         }
@@ -182,19 +183,39 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
 
                     Spacer(Modifier.size(50.dp))
 
+                    Row (modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center){
+                        Button(
+                            onClick = { mainViewModel.loadData() },
+                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                        ) {
+                            Icon(
+                                Icons.Filled.Refresh,
+                                contentDescription = "Localized description",
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                            Text("Actualiser la liste")
+                        }
 
-                    Button(
-                        onClick = { mainViewModel.loadData() },
-                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-                    ) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Localized description",
-                            modifier = Modifier.size(ButtonDefaults.IconSize)
-                        )
-                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text("RETOUR")
+                        Spacer(Modifier.size(50.dp))
+
+
+                        Button(
+                            onClick = {  },
+                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                        ) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription = "Localized description",
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                            Text("RETOUR")
+                        }
                     }
+
+
 
                 }
 
