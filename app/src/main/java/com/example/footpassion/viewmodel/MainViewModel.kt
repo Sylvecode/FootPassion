@@ -55,8 +55,6 @@ class MainViewModel : ViewModel() {
 
 
     fun loadRecentGames(){
-
-
         //list.addAll(newData)
         viewModelScope.launch(Dispatchers.Default) {
             try {
