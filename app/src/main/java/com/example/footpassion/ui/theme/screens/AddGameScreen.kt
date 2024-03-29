@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
+import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -200,8 +201,8 @@ fun AddGameScreen(navHostController: NavHostController? = null, mainViewModel: M
                                 date = mainViewModel.dateParsed
 
                                  */
-
                             )
+                            navHostController?.navigate(Routes.ListMatchScreen.route)
                         },
                         contentPadding = ButtonDefaults.ButtonWithIconContentPadding
                     ) {

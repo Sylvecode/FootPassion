@@ -31,7 +31,7 @@ fun AppNavigation() {
 
     val navHostController : NavHostController = rememberNavController()
 
-    //viewModel appartient au framework peremt de récupérer une instance déjà existante s'il en existe une
+    //viewModel appartient au framework permet de récupérer une instance déjà existante s'il en existe une
     val mainViewModel: MainViewModel = viewModel()
 
 

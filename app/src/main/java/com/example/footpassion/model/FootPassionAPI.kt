@@ -59,6 +59,12 @@ object FootPassionAPI {
     }
 
 
+    fun getRecentGames(): List<GameBean> {
+        var json = sendGet("http://10.0.2.2:8080/getRecentGames")
+        return gson.fromJson(json, Array<GameBean>::class.java).toList()
+    }
+
+
 
     //Méthode qui prend en entrée une url, execute la requête
     //Retourne le code HTML/JSON reçu

@@ -13,14 +13,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
+val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE)
 class MainViewModel : ViewModel() {
-
-
     val team1Text = mutableStateOf("")
     val team2Text = mutableStateOf("")
     val dateText = mutableStateOf("")
-    @SuppressLint("SimpleDateFormat")
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     val dateParsed: Date = runCatching { dateFormat.parse(dateText.value) }.getOrElse {
         Date() // Valeur par défaut en cas d'échec du parsing
     }
@@ -42,6 +40,30 @@ class MainViewModel : ViewModel() {
             try {
                 val newData = FootPassionAPI.getAll()
                 launch(Dispatchers.Main) {
+                    myList.clear()
+                    myList.addAll(newData)
+                }
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                launch(Dispatchers.Main) {
+                    errorMessage.value = "Erreur : ${e.message}"
+                }
+            }
+        }
+    }
+
+
+    fun loadRecentGames(){
+
+        errorMessage.value = ""
+
+        //list.addAll(newData)
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                val newData = FootPassionAPI.getRecentGames()
+                launch(Dispatchers.Main) {
+                    myList.clear()
                     myList.addAll(newData)
                 }
             }
@@ -76,6 +98,11 @@ class MainViewModel : ViewModel() {
     private fun convertStringToDate(dateString: String): Date {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE) // Format de la date à parser
         return formatter.parse(dateString)!!
+    }
+
+    fun convertDateToString(date: Date?): String? {
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE) // Format de la date à formatter
+        return date?.let { formatter.format(it) } // Formater la date et retourner la chaîne de caractères
     }
 
 

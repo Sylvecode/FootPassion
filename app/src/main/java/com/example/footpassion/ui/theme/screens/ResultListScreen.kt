@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,6 +65,10 @@ fun ResultPreview() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel: MainViewModel) {
+
+    LaunchedEffect(key1 = "") {
+        mainViewModel.loadRecentGames()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Ajouter l'image en arrière-plan
@@ -164,29 +169,26 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
                         items(mainViewModel.myList.size) { index ->
                             val game = mainViewModel.myList[index]
                             Row {
-                                Spacer(Modifier.width(5.dp))
-                                Text(
-                                    text = game.date.toString(),
-                                    textAlign = TextAlign.Start,
-                                )
-                                Spacer(Modifier.width(10.dp))
+                                Spacer(Modifier.width(20.dp))
+                                mainViewModel.convertDateToString(game.date)?.let {
+                                    Text(
+                                        text = it,
+                                        textAlign = TextAlign.Start,
+                                    )
+                                }
+                                Spacer(Modifier.width(60.dp))
                                 Text(text = game.equipe1+" " + game.scoreEquipe1.toString() + " - "+ game.scoreEquipe2.toString()+ " " + game.equipe2)
                             }
                         }
 
                     }
 
-                    /*
-
-
-                                    } */
-
                     Spacer(Modifier.size(50.dp))
 
                     Row (modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center){
                         Button(
-                            onClick = { mainViewModel.loadData() },
+                            onClick = { mainViewModel.loadRecentGames() },
                             contentPadding = ButtonDefaults.ButtonWithIconContentPadding
                         ) {
                             Icon(
@@ -202,7 +204,7 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
 
 
                         Button(
-                            onClick = {  },
+                            onClick = { navHostController?.navigate(Routes.ListMatchScreen.route)},
                             contentPadding = ButtonDefaults.ButtonWithIconContentPadding
                         ) {
                             Icon(
@@ -214,8 +216,6 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
                             Text("RETOUR")
                         }
                     }
-
-
 
                 }
 

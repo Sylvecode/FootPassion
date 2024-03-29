@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                     val navHostController : NavHostController = rememberNavController()
                     //AddGameScreen(navHostController, mainViewModel = mainViewModel)
                     //ListMatchScreen(navHostController, mainViewModel = mainViewModel)
-                    ResultListScreen(navHostController, mainViewModel = mainViewModel)
-                //AppNavigation()
+                    //ResultListScreen(navHostController, mainViewModel = mainViewModel)
+                AppNavigation()
                 }
             }
         }

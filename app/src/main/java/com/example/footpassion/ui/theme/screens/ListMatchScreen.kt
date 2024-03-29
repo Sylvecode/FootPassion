@@ -47,6 +47,7 @@ import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
 import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
+import com.example.footpassion.viewmodel.dateFormat
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -162,7 +163,7 @@ fun ListMatchScreen(navHostController: NavHostController? = null, mainViewModel:
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = game.date.toString(),
+                                    text = if (game.date!= null) dateFormat.format(game.date) else "-",
                                     fontSize = 13.sp,
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.primary
@@ -277,33 +278,38 @@ fun ListMatchScreen(navHostController: NavHostController? = null, mainViewModel:
                                     Text("Fin du Match")
                                 }
                             }
-
                         }
                     }
                 }
             }
 
-            Box(
+        }
+
+    }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Row (){
+            Button(
+                onClick = { mainViewModel.loadData() },
+                colors = ButtonDefaults.buttonColors(Color.Blue, Color.White),
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                    .padding(16.dp) // Ajoute un espace autour du bouton
             ) {
-                Button(
-                    onClick = { },
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-                ) {
-                    Icon(
-                        Icons.Filled.Refresh,
-                        contentDescription = "Localized description",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Rafraichir la liste")
-                }
+                Text("Rafraîchir")
+            }
+
+            Button(
+                onClick = { navHostController?.navigate(Routes.ResultListScreen.route) },
+                colors = ButtonDefaults.buttonColors(Color.Blue, Color.White),
+                modifier = Modifier
+                    .padding(16.dp) // Ajoute un espace autour du bouton
+            ) {
+                Text("Historique")
             }
         }
-    }
 
+    }
 
 }
