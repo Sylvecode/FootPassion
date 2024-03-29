@@ -56,7 +56,6 @@ class MainViewModel : ViewModel() {
 
     fun loadRecentGames(){
 
-        errorMessage.value = ""
 
         //list.addAll(newData)
         viewModelScope.launch(Dispatchers.Default) {
@@ -116,7 +115,6 @@ class MainViewModel : ViewModel() {
         } else if (action == "end") {
             game?.fini = true
         }
-
 
         viewModelScope.launch(Dispatchers.Default) {
             try {
