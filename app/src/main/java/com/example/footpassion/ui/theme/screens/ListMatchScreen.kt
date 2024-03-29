@@ -2,16 +2,20 @@ package com.example.footpassion.ui.theme.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -23,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,7 +51,7 @@ import com.example.footpassion.viewmodel.MainViewModel
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ListMatchPreview(){
+fun ListMatchPreview() {
     FootPassionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             val mainViewModel: MainViewModel = viewModel()
@@ -56,16 +62,15 @@ fun ListMatchPreview(){
 
 @Composable
 fun ListMatchScreen(navHostController: NavHostController? = null, mainViewModel: MainViewModel) {
-    // État local pour le score de l'équipe 1
-    val scoreTeam1 = remember { mutableStateOf(0) }
 
-// État local pour le score de l'équipe 2
-    val scoreTeam2 = remember { mutableStateOf(0) }
-    // État local pour le score final du match
-    val finalScore = remember { mutableStateOf("") }
+    LaunchedEffect(key1 = "") {
+        mainViewModel.loadData()
+    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
+
+
         Image(
             painter = painterResource(id = R.drawable.pelouse),
             contentDescription = null, // Modifier en conséquence
@@ -129,132 +134,155 @@ fun ListMatchScreen(navHostController: NavHostController? = null, mainViewModel:
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
+
+
             }
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.padding(35.dp)
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 16.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                items(mainViewModel.myList) { game ->
+                    var scoreEquipe1 = remember { mutableIntStateOf(0) }
+                    scoreEquipe1.intValue = game.scoreEquipe1
+                    var scoreEquipe2 = remember { mutableIntStateOf(0) }
+                    scoreEquipe2.intValue = game.scoreEquipe2
+                    var fini = remember { mutableStateOf(false) }
+                    fini.value = game.fini
+                    Spacer(Modifier.height(50.dp))
+                    Row(modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(14.dp))
                     ) {
-                        Text(
-                            text = "2024-03-31",
-                            fontSize = 13.sp,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "OM",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                        Text(
-                            text = " ",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            text = "PSG",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "En Cours",
-                            fontSize = 15.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-
-                        Text(
-                            text = "0",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                        Text(
-                            text = "-",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                        Text(
-                            text = "0",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp, 0.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Button(
-                            onClick = { },
-                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                        Column(
+                            modifier = Modifier.padding(16.dp)
                         ) {
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("+", fontSize = 18.sp)
-                        }
-                        Text(
-                            text = " ",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp
-                        )
-                        Button(
-                            onClick = { },
-                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-                        ) {
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("+", fontSize = 18.sp)
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Button(
-                            onClick = { },
-                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                        ) {
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("Fin du Match")
-                        }
-                    }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = game.date.toString(),
+                                    fontSize = 13.sp,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
 
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = game.equipe1,
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                                Text(
+                                    text = " ",
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = game.equipe2,
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = if (fini.value) "Terminé" else "En Cours",
+                                    fontSize = 15.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+                                Text(
+                                    text = scoreEquipe1.value.toString(),
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                                Text(
+                                    text = "-",
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                                Text(
+                                    text = scoreEquipe2.value.toString(),
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp, 0.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Button(
+                                    onClick = {
+                                        scoreEquipe1.value +=1
+                                        mainViewModel.updateGame(game.id, "equipe1")},
+                                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                ) {
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("+", fontSize = 18.sp)
+                                }
+                                Text(
+                                    text = " ",
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 25.sp
+                                )
+                                Button(
+                                    onClick = {
+                                        scoreEquipe2.value +=1
+                                        mainViewModel.updateGame(game.id, "equipe2")},
+                                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                                ) {
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("+", fontSize = 18.sp)
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Button(
+                                    onClick = {
+                                        fini.value = true
+                                        mainViewModel.updateGame(game.id, "end")},
+                                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                ) {
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("Fin du Match")
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
+
             Box(
                 modifier = Modifier
                     .padding(16.dp)

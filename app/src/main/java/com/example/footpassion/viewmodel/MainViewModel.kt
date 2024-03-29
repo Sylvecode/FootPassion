@@ -1,5 +1,6 @@
 package com.example.footpassion.viewmodel
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class MainViewModel : ViewModel() {
 
@@ -17,25 +19,24 @@ class MainViewModel : ViewModel() {
     val team1Text = mutableStateOf("")
     val team2Text = mutableStateOf("")
     val dateText = mutableStateOf("")
-    val dateParsed: Date = SimpleDateFormat("yyyy/MM/dd").parse(dateText.value)
+    @SuppressLint("SimpleDateFormat")
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val dateParsed: Date = runCatching { dateFormat.parse(dateText.value) }.getOrElse {
+        Date() // Valeur par défaut en cas d'échec du parsing
+    }
 
 
+    var myList = mutableStateListOf<GameBean>()
 
-
-    val myList = mutableStateListOf<GameBean>()
     private var errorMessage = mutableStateOf("")
 
 
-    fun loadData(): List<GameBean>? {
+
+
+    fun loadData(){
 
         errorMessage.value = ""
-        var newData: List<GameBean>? = null
-        try {
-             newData = FootPassionAPI.getAll()
-        }
-        catch(e: Exception) {
-            e.printStackTrace()
-        }
+
         //list.addAll(newData)
         viewModelScope.launch(Dispatchers.Default) {
             try {
@@ -51,17 +52,16 @@ class MainViewModel : ViewModel() {
                 }
             }
         }
-        return newData
     }
 
 
 
-    fun createGame(equipe1: String, equipe2: String, date: Date) {
+    fun createGame() {
         viewModelScope.launch(Dispatchers.Default) {
             try {
                 println("Création d'un match")
-                FootPassionAPI.addGame(equipe1 = equipe1, equipe2 = equipe2, date = date)
-                val newGame = GameBean(equipe1 = equipe1, equipe2 = equipe2, date = date)
+                FootPassionAPI.addGame(equipe1 = team1Text.value, equipe2 = team2Text.value, date = dateText.value)
+                val newGame = GameBean(equipe1 = team1Text.value, equipe2 = team2Text.value, date = convertStringToDate(dateText.value))
                 launch(Dispatchers.Main) {
                     myList.add(newGame)
                 }
@@ -69,7 +69,40 @@ class MainViewModel : ViewModel() {
                 e.printStackTrace()
             }
         }
+
     }
+
+
+    private fun convertStringToDate(dateString: String): Date {
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE) // Format de la date à parser
+        return formatter.parse(dateString)!!
+    }
+
+
+    fun updateGame(id: Long?, action: String) {
+        var game = myList.find { it.id == id }
+        if (action == "equipe1") {
+            game?.scoreEquipe1 = game?.scoreEquipe1!! + 1
+        } else if (action == "equipe2") {
+            game?.scoreEquipe2 = game?.scoreEquipe2!! + 1
+
+        } else if (action == "end") {
+            game?.fini = true
+        }
+
+
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                println("Mise à jour du score ou de l'issue d'un match")
+                FootPassionAPI.updateGame(id = id, action = action)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+
 
     /*fun loadDetail() {
 

@@ -1,7 +1,7 @@
 package com.example.footpassion.ui.theme.screens
 
 import android.content.res.Configuration
-import android.icu.text.SimpleDateFormat
+import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,13 +34,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.footpassion.R
 import com.example.footpassion.ui.theme.FootPassionTheme
-import com.example.footpassion.ui.theme.Routes
 import com.example.footpassion.viewmodel.MainViewModel
-import java.util.Date
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -58,6 +57,7 @@ fun AddGamePreview() {
         }
     }
 }
+
 
 
 @Composable
@@ -120,7 +120,7 @@ fun AddGameScreen(navHostController: NavHostController? = null, mainViewModel: M
             Spacer(Modifier.size(40.dp))
 
             Text(
-                text = "Rentrer 2 équipes et la date du match",
+                text = "Rentrez 2 équipes et la date du match",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
@@ -184,18 +184,23 @@ fun AddGameScreen(navHostController: NavHostController? = null, mainViewModel: M
 // Champ de texte pour la date
                     TextField(
                         value = mainViewModel.dateText.value,
-                        onValueChange = { mainViewModel.dateText.value},
+                        onValueChange = { mainViewModel.dateText.value = it},
                         modifier = Modifier.fillMaxWidth()
                     )
+
 
                     Spacer(Modifier.height(20.dp))
 
                     Button(
                         onClick = {
                             mainViewModel.createGame(
+                                /*
                                 equipe1 = mainViewModel.team1Text.value,
                                 equipe2 = mainViewModel.team2Text.value,
                                 date = mainViewModel.dateParsed
+
+                                 */
+
                             )
                         },
                         contentPadding = ButtonDefaults.ButtonWithIconContentPadding

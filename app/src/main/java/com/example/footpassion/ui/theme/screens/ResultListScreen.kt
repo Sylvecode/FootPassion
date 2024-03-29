@@ -155,36 +155,28 @@ fun ResultListScreen(navHostController: NavHostController? = null, mainViewModel
                             modifier = Modifier.padding(15.dp)
                         )
                     }
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.weight(1f)
+                    )
+                    {
+                        items(mainViewModel.myList.size) { index ->
+                            val game = mainViewModel.myList[index]
+                            Row {
+                                Spacer(Modifier.width(20.dp))
+                                Text(
+                                    text = game.date.toString(),
+                                    textAlign = TextAlign.Start,
+                                )
+                                Spacer(Modifier.width(60.dp))
+                                Text(text = game.equipe1+" " + game.scoreEquipe1.toString() + " - "+ game.scoreEquipe2.toString()+ " " + game.equipe2)
+                            }
+                        }
 
-                    Row {
-                        Spacer(Modifier.width(20.dp))
-                        Text(
-                            text = "2024-03-25",
-                            textAlign = TextAlign.Start,
-                        )
-                        Spacer(Modifier.width(60.dp))
-                        Text(text = "PSG    2 - 0    OM")
                     }
+
                     /*
-                                        LazyColumn(
-                                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        {
-                                            items(myMatchViewModel.myList.size) { index ->
-                                                val match = myMatchViewModel.myList[index]
-                                                PictureRowItem(data = match,
-                                                    onPictureClick = {
-                                                        navHostController?.navigate(
-                                                            Routes.MatchDetailScreen.withObject(
-                                                                match
-                                                            )
-                                                        )
-                                                    })
-                                            }
 
-
-                                        }
 
                                     } */
 
