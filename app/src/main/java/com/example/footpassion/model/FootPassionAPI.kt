@@ -81,7 +81,7 @@ object FootPassionAPI {
                 throw Exception("Réponse du serveur incorrect :${it.code}")
             }
             //Résultat de la requête
-            it.body.string()
+            it.body!!.string()
         }
     }
 }
